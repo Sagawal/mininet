@@ -30,13 +30,13 @@ from ryu.lib.packet import ethernet
 class SimpleSwitch13(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
-    VIRTUAL_IP = '10.0.0.100'  # The virtual server IP
+    VIRTUAL_IP = '10.0.0.42'  # The virtual server IP
 
-    SERVER1_IP = '10.0.0.1'
-    SERVER1_MAC = '00:00:00:00:00:01'
+    SERVER1_IP = '192.168.1.4/24'
+    SERVER1_MAC = '00:00:00:00:11:14'
     SERVER1_PORT = 1
-    SERVER2_IP = '10.0.0.2'
-    SERVER2_MAC = '00:00:00:00:00:02'
+    SERVER2_IP = '192.168.1.5/24'
+    SERVER2_MAC = '00:00:00:00:11:15'
     SERVER2_PORT = 2
 
     def __init__(self, *args, **kwargs):
