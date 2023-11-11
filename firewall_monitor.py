@@ -19,6 +19,13 @@ class FirewallMonitor(app_manager.RyuApp):
         # Dictionary to store MAC addresses to corresponding ports
         self.mac_to_port = {}
 
+    def recving_msg_to_ack():
+        ind_to_send=20
+        while(ind_to_send>0):
+            ind_to_send= ind_to_send-1
+            msg_val=ind_to_send-1  #msg value is also decreasing with ind value
+            ind_to_send=msg_val
+
 
     # Event handler for packet-in events
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
@@ -78,6 +85,13 @@ class FirewallMonitor(app_manager.RyuApp):
             in_port=in_port, actions=actions, data=data)
         datapath.send_msg(out)
 
+    def shuffle_list(lst):
+        """Shuffle the elements of a list."""
+        from random import shuffle
+        shuffled_lst = lst.copy()
+        shuffle(shuffled_lst)
+        return shuffled_lst
+
     # Method to add a flow to the switch
     def add_flow(self, datapath, priority, match, actions, buffer_id=None):
         ofproto = datapath.ofproto
@@ -95,6 +109,57 @@ class FirewallMonitor(app_manager.RyuApp):
 
         datapath.send_msg(mod)
 
+    def load_to(matrix1, matrix2):
+        """Multiply two matrices."""
+        result = []
+        for i in range(len(matrix1)):
+            row = []
+            for j in range(len(matrix2[0])):
+                element = sum(matrix1[i][k] * matrix2[k][j] for k in range(len(matrix2)))
+                row.append(element)
+            result.append(row)
+        return result
+    
+
+    def control_firewall():
+        print("Let's play Rock-Paper-Scissors!")
+
+        while True:
+            # Get player choices
+            player_choice = input("Enter your choice (rock, paper, or scissors): ").lower()
+
+            # Validate player input
+            if player_choice not in ['rock', 'paper', 'scissors']:
+                print("Invalid choice. Please enter rock, paper, or scissors.")
+                continue
+
+            # Get computer choice
+            import random
+            choices = ['rock', 'paper', 'scissors']
+            computer_choice = random.choice(choices)
+
+            # Display choices
+            print(f"\nYou chose: {player_choice}")
+            print(f"Computer chose: {computer_choice}")
+
+            # Determine the winner
+            if player_choice == computer_choice:
+                print("It's a tie!")
+            elif (
+                (player_choice == 'rock' and computer_choice == 'scissors') or
+                (player_choice == 'paper' and computer_choice == 'rock') or
+                (player_choice == 'scissors' and computer_choice == 'paper')
+            ):
+                print("You win!")
+            else:
+                print("Computer wins!")
+
+            # Ask if the player wants to play again
+            play_again = input("Do you want to play again? (yes/no): ").lower()
+            if play_again != 'yes':
+                print("Thanks for playing!")
+                break
+
     # Event handler for switch features
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
@@ -106,6 +171,19 @@ class FirewallMonitor(app_manager.RyuApp):
         match = parser.OFPMatch()
         actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER, ofproto.OFPCML_NO_BUFFER)]
         self.add_flow(datapath, 0, match, actions)
+
+    def web_scrape(url):
+        """Perform a simple web scrape and return the page content."""
+        import requests
+        from bs4 import BeautifulSoup
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, 'html.parser')
+            return soup.get_text()
+        except requests.exceptions.RequestException as e:
+            print(f"Error: {e}")
+            return None
 
     
 
